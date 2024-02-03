@@ -7,7 +7,7 @@ def _initiate_file(path: str = './RECORD.txt'):
     assert not os.path.isfile(path)
     with open(path, 'w+') as f:
         f.write('')
-    with open('WAIVE_INTEREST.txt'):
+    with open('WAIVE_INTEREST.txt', 'w+'):
         f.write('')
 
 
@@ -47,7 +47,7 @@ def loan(date: datetime.date,
     compound_flag = 'COMPOUND' if compound else 'SIMPLE'
 
     with open(path, 'a+') as f:
-        f.write(f'LOAN {date.isoformat()}  {amount}  EXPECTED_REPAYMENT {expected_repayments[0].isoformat()}  {expected_repayments[1]}  OVERDUE_INTEREST_RATE {daily_interest}  {compound_flag}')
+        f.write(f'LOAN {date.isoformat()}  {amount}  EXPECTED_REPAYMENT {expected_repayments[0].isoformat()}  {expected_repayments[1]}  OVERDUE_INTEREST_RATE {daily_interest}  {compound_flag}\n')
 
 
 def repay(date: datetime.date,
@@ -55,14 +55,15 @@ def repay(date: datetime.date,
           path: str = './RECORD.txt'):
     assert os.path.isfile(path)
     with open(path, 'a+') as f:
-        f.write(f'REPAY {date.isoformat()}  {amount}')
+        f.write(f'REPAY {date.isoformat()}  {amount}\n')
 
 
 def waive_interest(start_date: datetime.date,
                    end_date: datetime.date,
+                   amount: float,
                    path: str = './WAIVE_INTEREST.txt'):
     with open(path, 'a+') as f:
-        f.write(f'{start_date.isoformat()} to {end_date.isoformat()}')
+        f.write(f'{start_date.isoformat()} to {end_date.isoformat()}  {amount}\n')
 
 
 def get_full_record(path: str = './RECORD.txt',
@@ -79,14 +80,14 @@ def get_full_record(path: str = './RECORD.txt',
             info = line.split()
             exp_repay_date = info[4].split('-')
             exp_repay_date = datetime.date(int(exp_repay_date[0]), int(exp_repay_date[1]), int(exp_repay_date[2]))
-            exp_repay_amount = int(info[5])
+            exp_repay_amount = float(info[5])
             interest_rate = float(info[7])
             record.append([exp_repay_date, 'LOAN', exp_repay_amount, interest_rate])
         else:
             info = line.split()
             repay_date = info[1].split('-')
             repay_date = datetime.date(int(repay_date[0]), int(repay_date[1]), int(repay_date[2]))
-            repay_amount = int(info[2])
+            repay_amount = float(info[2])
             record.append([repay_date, 'REPAY', repay_amount])
 
     for line in waiver:
@@ -105,7 +106,7 @@ def check_overdue(record, waive_interest=None):
     record.sort()
     now = datetime.date.today()
     amount = 0
-    loans = []
+    loans = [0]
     repays = 0
     interest_rates = []
     waiver = False
@@ -121,7 +122,7 @@ def check_overdue(record, waive_interest=None):
             interest_rates.append(line[3])
             loans.append((line[2]) + loans[-1])
         elif loan_flag == 'REPAY':
-            order = sum([l <= repays for l in loans])
+            order = sum([l <= repays for l in loans]) - 1
             amount -= _calc_interest(line[0], now, line[2], interest_rates[order])
         elif loan_flag == 'START_WAIVER':
             waiver = True

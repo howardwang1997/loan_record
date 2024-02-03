@@ -1,4 +1,5 @@
 import argparse
+import datetime
 from utils import check_outstanding, check_overdue, get_full_record
 
 
@@ -15,10 +16,12 @@ def main():
     elif args.outstanding:
         print(f'OUTSTANDING AMOUNT IS {check_outstanding(record):.2f}')
     elif args.update:
-        with open('README.md', 'r+') as f:
+        with open('README.md') as f:
             lines = f.readlines()
-            lines[-1] = ''
-
+        ovd, ots = check_overdue(record), check_outstanding(record)
+        lines[-1] = f'### OVERDUE: HK$ {ovd:.2f} , OUTSTANDING: HK$ {ots: .2f} ({datetime.date.today().isoformat()})'
+        with open('README.md', 'w+') as f:
+            f.write(''.join(lines))
 
 
 if __name__ == '__main__':
