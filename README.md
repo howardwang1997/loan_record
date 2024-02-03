@@ -2,6 +2,10 @@
 Record the loan to Mui Tsun Kin, and the outstanding amount with interest.
 
 ## Get started
+Please install python before getting started. Instructions and packages can be found in this website:
+```commandline
+https://www.python.org/downloads/
+```
 Get started with cloning this repository and change to this directory:
 
 ```
@@ -12,11 +16,11 @@ The current status shown at the bottom of this repository will be updated from t
 
 Check your outstanding amount using this command:
 ```commandline
-
+python3 run.py --outstanding
 ```
 Check your overdue amount using this command:
 ```commandline
-
+python3 run.py --overdue
 ```
 Please be responsible for your own financial.
 ## Current status 
