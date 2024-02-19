@@ -25,4 +25,4 @@ python3 run.py --overdue
 Please be responsible for your own financial.
 ## Current status 
 
-### OVERDUE: HK$ 23554.07 , OUTSTANDING: HK$  56054.07 (2024-02-06)
+### OVERDUE: HK$ 23858.71 , OUTSTANDING: HK$  56358.71 (2024-02-19)
